@@ -61,8 +61,8 @@
 		D317C0E418D1F4050036BE75 /* PKMultiLineCommentState.h in Headers */ = {isa = PBXBuildFile; fileRef = D3C221E70FFE8C60004514FE /* PKMultiLineCommentState.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D317C0E518D1F4050036BE75 /* PKEmailState.h in Headers */ = {isa = PBXBuildFile; fileRef = D35F4A8B11643662003811F3 /* PKEmailState.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D317C0E618D1F4050036BE75 /* PKURLState.h in Headers */ = {isa = PBXBuildFile; fileRef = D35F4A8C11643662003811F3 /* PKURLState.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D317C0E718D1F4050036BE75 /* PKTwitterState.h in Headers */ = {isa = PBXBuildFile; fileRef = D33DC19F11656952004CE58C /* PKTwitterState.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D317C0E818D1F4050036BE75 /* PKHashtagState.h in Headers */ = {isa = PBXBuildFile; fileRef = D37F232A1453842800A98014 /* PKHashtagState.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D317C0E718D1F4050036BE75 /* PKTwitterState.h in Headers */ = {isa = PBXBuildFile; fileRef = D33DC19F11656952004CE58C /* PKTwitterState.h */; };
+		D317C0E818D1F4050036BE75 /* PKHashtagState.h in Headers */ = {isa = PBXBuildFile; fileRef = D37F232A1453842800A98014 /* PKHashtagState.h */; };
 		D317C10A18D1F48A0036BE75 /* PKParser.m in Sources */ = {isa = PBXBuildFile; fileRef = D3382F9A171C80EB00CCE513 /* PKParser.m */; };
 		D317C10B18D1F48A0036BE75 /* PKAssembly.m in Sources */ = {isa = PBXBuildFile; fileRef = D34BADA00FF9C9B000D7773A /* PKAssembly.m */; };
 		D317C10C18D1F48A0036BE75 /* PKRecognitionException.m in Sources */ = {isa = PBXBuildFile; fileRef = D3382FD6171C8C9100CCE513 /* PKRecognitionException.m */; };
@@ -2501,6 +2501,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath/";
@@ -2525,6 +2526,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath/";

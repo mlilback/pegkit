@@ -134,7 +134,7 @@
 #define MATCHES_IGNORE_CASE(pattern, str)   ([[NSRegularExpression regularExpressionWithPattern:(pattern) options:NSRegularExpressionCaseInsensitive error:nil] numberOfMatchesInString:(str) options:0 range:NSMakeRange(0, [(str) length])] > 0)
 
 #define ABOVE(fence) [self.assembly objectsAbove:(fence)]
-#define EMPTY() [self.assembly isStackEmpty]
+#define STACK_EMPTY() [self.assembly isStackEmpty]
 
 #define LOG(obj) do { NSLog(@"%@", (obj)); } while (0);
 #define PRINT(str) do { printf("%s\n", (str)); } while (0);

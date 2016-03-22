@@ -40,7 +40,7 @@
     [self execute:^{
     
     id word = nil;
-    while (!EMPTY()) {
+    while (!STACK_EMPTY()) {
         word = POP_STR();
     }
     PUSH(word);
