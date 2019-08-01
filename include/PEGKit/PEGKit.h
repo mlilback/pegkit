@@ -42,8 +42,9 @@
 #import <PEGKit/PKWordState.h>
 #import <PEGKit/PKWhitespaceState.h>
 #if PK_PLATFORM_TWITTER_STATE
-#import <PEGKit/PKTwitterState.h>
-#import <PEGKit/PKHashtagState.h>
+#undef PK_PLATFORM_TWITTER_STATE
+//#import <PEGKit/PKTwitterState.h>
+//#import <PEGKit/PKHashtagState.h>
 #endif
 
 // ast
