@@ -38,6 +38,7 @@ NSString * const PEGKitErrorLineNumberKey = @"lineNumber";
 
 NSInteger PEGKitRecognitionErrorCode = 1;
 NSString * const PEGKitRecognitionTokenMatchFailed = @"Failed to match next input token";
+NSString * const PEGKitRecognitionRuleMatchFailed = @"Failed to match next rule";
 NSString * const PEGKitRecognitionPredicateFailed = @"Predicate failed";
 
 @interface NSObject ()
@@ -134,6 +135,7 @@ NSString * const PEGKitRecognitionPredicateFailed = @"Predicate failed";
     self.tokenKindTab = nil;
     self.tokenKindNameTab = nil;
     self.resyncSet = nil;
+    self.tokenSource = nil;
     self.startRuleName = nil;
     self.statementTerminator = nil;
     self.singleLineCommentMarker = nil;
@@ -286,10 +288,12 @@ NSString * const PEGKitRecognitionPredicateFailed = @"Predicate failed";
         NSString *domain = PEGKitErrorDomain;
         NSString *name = rex.currentName;
         NSString *reason = rex.currentReason;
-        NSLog(@"%@: %@", name, reason);
+        NSRange range = rex.range;
+        NSUInteger lineNumber = rex.lineNumber;
+        //NSLog(@"%@: %@", name, reason);
 
         if (outError) {
-            *outError = [self errorWithDomain:domain name:name reason:reason range:rex.range lineNumber:rex.lineNumber];
+            *outError = [self errorWithDomain:domain name:name reason:reason range:range lineNumber:lineNumber];
         } else {
             [rex raise];
         }
@@ -298,7 +302,7 @@ NSString * const PEGKitRecognitionPredicateFailed = @"Predicate failed";
         NSString *domain = PEGKitErrorDomain;
         NSString *name = [ex name];
         NSString *reason = [ex reason];
-        NSLog(@"%@", reason);
+        //NSLog(@"%@", reason);
         
         if (outError) {
             *outError = [self errorWithDomain:domain name:name reason:reason range:NSMakeRange(NSNotFound, 0) lineNumber:0];
@@ -365,7 +369,7 @@ NSString * const PEGKitRecognitionPredicateFailed = @"Predicate failed";
         }
     } else {
         NSString *msg = [NSString stringWithFormat:@"Expected : %@\n", [self stringForTokenKind:tokenKind]];
-        [self raise:msg];
+        [self raiseWithName:PEGKitRecognitionTokenMatchFailed message:msg];
     }
 }
 
@@ -572,6 +576,7 @@ NSString * const PEGKitRecognitionPredicateFailed = @"Predicate failed";
 
     va_end(vargs);
 
+    NSAssert(_exception, @"");
     _exception.currentName = name;
     _exception.currentReason = str;
     _exception.lineNumber = lineNum;
@@ -585,12 +590,16 @@ NSString * const PEGKitRecognitionPredicateFailed = @"Predicate failed";
 
 
 - (void)raise:(NSString *)msg {
-    [self raiseWithName:PEGKitRecognitionTokenMatchFailed message:msg];
+    [self raiseWithName:PEGKitRecognitionRuleMatchFailed message:msg];
 }
 
     
 - (void)raiseWithName:(NSString *)name message:(NSString *)msg {
     PKToken *lt = LT(1);
+    
+    if (lt.isEOF && [_lookahead count]) {
+        lt = [_lookahead firstObject];
+    }
     
     NSUInteger lineNum = lt.lineNumber;
     //NSAssert(NSNotFound != lineNum, @"");
@@ -617,7 +626,7 @@ NSString * const PEGKitRecognitionPredicateFailed = @"Predicate failed";
     }
     
     id lineNumVal = NSNotFound == lineNum ? @"Unknown" : @(lineNum);
-    [self raiseInRange:r lineNumber:lineNum name:PEGKitRecognitionTokenMatchFailed format:fmt, msg, lineNumVal, after, found];
+    [self raiseInRange:r lineNumber:lineNum name:name format:fmt, msg, lineNumVal, after, found];
 }
 
 
@@ -773,10 +782,11 @@ NSString * const PEGKitRecognitionPredicateFailed = @"Predicate failed";
 
 
 - (void)parseRule:(SEL)ruleSelector withMemo:(NSMutableDictionary *)memoization {
+    if (self.isSpeculating && [self alreadyParsedRule:memoization]) return;
+    
     BOOL failed = NO;
     NSInteger startTokenIndex = self.p;
-    if (self.isSpeculating && [self alreadyParsedRule:memoization]) return;
-                                
+
     @try { [self performSelector:ruleSelector]; }
     @catch (PKRecognitionException *ex) { failed = YES; @throw ex; }
     @finally {
@@ -909,7 +919,7 @@ NSString * const PEGKitRecognitionPredicateFailed = @"Predicate failed";
 }
 
 
-- (NSArray *)reversedArray:(NSArray *)inArray {
+- (NSMutableArray *)reversedArray:(NSArray *)inArray {
     return [inArray reversedMutableArray];
 }
 
